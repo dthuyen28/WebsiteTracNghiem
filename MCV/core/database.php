@@ -18,6 +18,7 @@ class Database {
         
         try {
             $this->conn = new PDO($dsn, $this->username, $this->password);
+            $this->conn->exec("set names utf8");
             // Cấu hình: Báo lỗi dưới dạng Exception và lấy dữ liệu dưới dạng mảng kết hợp
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);

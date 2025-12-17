@@ -1,0 +1,11 @@
+# Bật tính năng URL Rewriting
+RewriteEngine On
+
+# 1. Bảo vệ các file/thư mục hiện có
+# Nếu đường dẫn được yêu cầu là một file hoặc thư mục có thật, bỏ qua các quy tắc sau
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# 2. Quy tắc chính: Chuyển hướng mọi yêu cầu còn lại sang index.php
+# Mọi yêu cầu không phải file/thư mục thật sẽ được gửi đến index.php
+RewriteRule ^(.*)$ index.php/$1 [L]
