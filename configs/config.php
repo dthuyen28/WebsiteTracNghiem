@@ -16,7 +16,7 @@ const _DRIVER = 'mysql';
 // debug error
 const _DEBUG = true;
 // url
-const _BASE_URL ='http://localhost/Tracnghiem/wbTracnghiem'
+const _BASE_URL ='http://localhost/Tracnghiem/wbTracnghiem';
 
 // thiết lập host
 //echo 'http:'. $_SERVER['HTTP_HOST'] . '/manager_course';
