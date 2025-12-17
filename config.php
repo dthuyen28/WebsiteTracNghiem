@@ -30,8 +30,27 @@ define('_HOST_URL_TEMPLATES', 'http:'. $_SERVER['HTTP_HOST'] . '/manager_course/
 define('_PATH_URL',__DIR__);
 define('_PATH_URL_TEMPLATES', _PATH_URL. '/templates');
 
-echo _HOST_URL .'<br>';
-echo _HOST_URL_TEMPLATES .'<br>';
-echo _PATH_URL .'<br>';
-echo _PATH_URL_TEMPLATES .'<br>';
-echo 'http:' . $_SERVER['HTTP_HOST'] . '/tracnghiem';
+
+// đường dẫn gốc
+define("ROOT_PATH", dirname(__FILE__));
+
+// MVC paths
+define("MCV_PATH", ROOT_PATH . "/MCV");
+define("CORE_PATH", MCV_PATH . "/core");
+define("MODEL_PATH", MCV_PATH . "/models");
+define("CONTROLLER_PATH", MCV_PATH . "/controllers");
+define("VIEW_PATH", MCV_PATH . "/views");
+
+
+
+require_once CORE_PATH . "/app.php";
+require_once CORE_PATH . "/database.php";
+require_once "./MCV/core/controller.php"; // Nạp class cha trước
+require_once "./MCV/core/app.php";        // Nạp router sau
+
+// echo _HOST_URL .'<br>';
+// echo _HOST_URL_TEMPLATES .'<br>';
+// echo _PATH_URL .'<br>';
+// echo _PATH_URL_TEMPLATES .'<br>';
+// echo 'http:' . $_SERVER['HTTP_HOST'] . '/tracnghiem';
+
