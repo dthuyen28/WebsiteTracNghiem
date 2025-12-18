@@ -49,5 +49,13 @@ class Database {
     public function getConnection() {
         return $this->conn;
     }
+    /**
+ * Hàm thực thi truy vấn SQL có tham số (Prepare Statement)
+ */
+public function query($sql, $params = []) {
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute($params);
+    return $stmt;
+}
 }
 ?>

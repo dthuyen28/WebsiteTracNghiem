@@ -1,13 +1,18 @@
 <?php
+
 class Controller {
 
+    // Load model
     public function model($model) {
-        require_once "mvc/models/" . $model . ".php";
-        return new $model;
+        require_once MODEL_PATH . "/" . $model . ".php";
+        return new $model();
     }
 
+    // Load view
     public function view($view, $data = []) {
-        extract($data);
-        require_once "mvc/views/" . $view . ".php";
+        if (!empty($data)) {
+            extract($data);
+        }
+        require_once VIEW_PATH . "/" . $view . ".php";
     }
 }
