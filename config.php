@@ -2,7 +2,7 @@
 <?php
 // system
 const uyn = true;
-
+define('_IN_SYSTEM', true);
 const _MODULES = 'dashboard';
 const _ACTION = 'index';
 
@@ -16,13 +16,14 @@ const _CHARSET = 'utf8mb4';
 
 // debug error
 const _DEBUG = true;
+define('_BASE_URL', 'http://localhost/Tracnghiem/WebsiteTracnghiem/');
 // url
-const _BASE_URL ='http://localhost/Tracnghiem/WebsiteTracnghiem';
+
 
 // thiết lập host
 //echo 'http:'. $_SERVER['HTTP_HOST'] . '/manager_course';
-define('_HOST_URL', 'http:'. $_SERVER['HTTP_HOST'] . '/manager_course');
-define('_HOST_URL_TEMPLATES', 'http:'. $_SERVER['HTTP_HOST'] . '/manager_course/templates');
+// define('_HOST_URL', 'http:'. $_SERVER['HTTP_HOST'] . '/manager_course');
+// define('_HOST_URL_TEMPLATES', 'http:'. $_SERVER['HTTP_HOST'] . '/manager_course/templates');
 // echo _HOST_URL;
 // echo _HOST_URL_TEMPLATES;
 
@@ -32,7 +33,7 @@ define('_PATH_URL_TEMPLATES', _PATH_URL. '/templates');
 
 
 // đường dẫn gốc
-define("ROOT_PATH", dirname(__FILE__));
+define("ROOT_PATH", __DIR__);
 
 // MVC paths
 define("MCV_PATH", ROOT_PATH . "/MCV");
@@ -42,11 +43,10 @@ define("CONTROLLER_PATH", MCV_PATH . "/controllers");
 define("VIEW_PATH", MCV_PATH . "/views");
 
 
-
-require_once CORE_PATH . "/app.php";
-require_once CORE_PATH . "/database.php";
-require_once "./MCV/core/controller.php"; // Nạp class cha trước
-require_once "./MCV/core/app.php";        // Nạp router sau
+// Nạp các file lõi hệ thống
+require_once CORE_PATH . "/Database.php";
+require_once CORE_PATH . "/Controller.php"; // Nạp class cha trước
+require_once CORE_PATH . "/App.php";
 
 // echo _HOST_URL .'<br>';
 // echo _HOST_URL_TEMPLATES .'<br>';

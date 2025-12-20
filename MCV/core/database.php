@@ -1,39 +1,48 @@
 <?php
 
 class Database {
-    // Biến tĩnh (static) lưu trữ thể hiện (instance) duy nhất
+    // Biến tĩnh lưu trữ thể hiện duy nhất (Singleton)
     private static $instance = null; 
-    private $conn; // Biến lưu trữ kết nối PDO
     
-    // !!! THAY ĐỔI CÁC THÔNG SỐ NÀY !!!
-    private $host = 'localhost'; // Tên máy chủ (thường là localhost)
-    private $db_name = 'tracnghiem'; // Tên CSDL đã tạo ở bước 1
-    private $username = 'root'; // Tên người dùng CSDL (thường là root)
-    private $password = ''; // Mật khẩu CSDL (Mặc định XAMPP là rỗng '')
-    // **********************************
+    // Biến lưu trữ kết nối PDO
+    private $conn; 
 
-    // Hàm tạo (constructor) bị chặn bên ngoài để chỉ Singleton mới dùng được
+    // Constructor Private: Chặn việc khởi tạo new Database() từ bên ngoài
     private function __construct() {
-        $dsn = "mysql:host={$this->host};dbname={$this->db_name};charset=utf8mb4";
+        // Lấy thông tin từ config.php để dễ quản lý
+        // Nếu thay đổi host/pass, chỉ cần sửa config.php là xong
+        $host = _HOST;
+        $db   = _DB;
+        $user = _USER;
+        $pass = _PASS;
+        $charset = _CHARSET;
+
+        $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
         
         try {
-            $this->conn = new PDO($dsn, $this->username, $this->password);
-            $this->conn->exec("set names utf8");
-            // Cấu hình: Báo lỗi dưới dạng Exception và lấy dữ liệu dưới dạng mảng kết hợp
+            $this->conn = new PDO($dsn, $user, $pass);
+            
+            // Cấu hình PDO:
+            // 1. Báo lỗi dạng Exception để try-catch bắt được
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            
+            // 2. Mặc định lấy dữ liệu dạng mảng kết hợp (Associative Array)
             $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            
+            // 3. Tắt tính năng giả lập prepare để chống SQL Injection tốt hơn
+            $this->conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+            
         } catch (PDOException $e) {
-            // Lỗi sẽ hiển thị thông báo
+            // Trong môi trường production, nên ghi log thay vì die()
             die("Lỗi kết nối CSDL: " . $e->getMessage());
         }
     }
 
-    // Chặn việc clone đối tượng (để đảm bảo tính duy nhất)
+    // Chặn việc clone object
     private function __clone() {}
 
     /**
-     * Phương thức tĩnh để lấy thể hiện (instance) duy nhất của lớp Database
-     * @return Database
+     * Lấy instance duy nhất của Database (Singleton Pattern)
      */
     public static function getInstance() {
         if (self::$instance == null) {
@@ -43,19 +52,41 @@ class Database {
     }
 
     /**
-     * Lấy đối tượng kết nối PDO đã được thiết lập
-     * @return PDO
+     * Trả về đối tượng PDO để các Model sử dụng
+     * Ví dụ: $this->db->prepare(...)
      */
     public function getConnection() {
         return $this->conn;
     }
+
     /**
- * Hàm thực thi truy vấn SQL có tham số (Prepare Statement)
- */
-public function query($sql, $params = []) {
-    $stmt = $this->conn->prepare($sql);
-    $stmt->execute($params);
-    return $stmt;
-}
+     * Hàm tiện ích: Thực thi query nhanh (Wrapper)
+     * Giúp viết code ngắn gọn hơn trong Model
+     * Ví dụ: $db->query("SELECT * FROM users WHERE id=?", [$id]);
+     */
+    public function query($sql, $params = []) {
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute($params);
+            return $stmt;
+        } catch (PDOException $e) {
+            die("Lỗi truy vấn SQL: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Hàm tiện ích: Lấy ID vừa insert (cần thiết cho chức năng Thêm mới)
+     */
+    public function lastInsertId() {
+        return $this->conn->lastInsertId();
+    }
+    
+    /**
+     * Hàm tiện ích: Chuẩn bị câu lệnh (Proxy cho PDO::prepare)
+     * Dùng khi Model gọi $this->prepare() thay vì $this->db->prepare()
+     */
+    public function prepare($sql) {
+        return $this->conn->prepare($sql);
+    }
 }
 ?>

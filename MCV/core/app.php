@@ -1,56 +1,69 @@
 <?php
 
-class app
+class App
 {
-    protected $controller = "HomeController"; // Tên mặc định chính xác
-    protected $action = "index";
+    // Controller mặc định khi vào trang chủ (không có url)
+    protected $controller = "HomeController";
+    
+    // Method mặc định
+    protected $method = "index";
+    
+    // Tham số trên URL
     protected $params = [];
 
     public function __construct()
     {
+        // 1. Phân tích URL
         $url = $this->parseUrl();
 
-        // 1. Kiểm tra Controller
-        if (isset($url[0])) {
-            if (file_exists(CONTROLLER_PATH . "/" . $url[0] . "Controller.php")) {
-                $this->controller = $url[0] . "Controller";
+        // 2. Xử lý CONTROLLER
+        if (!empty($url[0])) {
+            // Quy tắc: Tên URL viết hoa chữ đầu + "Controller"
+            // Ví dụ: user gõ "/auth" -> Tìm file "AuthController.php"
+            $controllerName = ucfirst($url[0]) . "Controller";
+            
+            // Kiểm tra file có tồn tại trong thư mục controllers không
+            // (Sử dụng CONTROLLER_PATH đã định nghĩa trong config.php)
+            if (file_exists(CONTROLLER_PATH . "/" . $controllerName . ".php")) {
+                $this->controller = $controllerName;
                 unset($url[0]);
-            } else {
-                // Nếu người dùng nhập bậy trên URL, vẫn trả về mặc định
-                $this->controller = "HomeController"; 
             }
         }
 
-        // 2. Nạp file Controller (Dòng 22 của bạn)
-        $fileName = CONTROLLER_PATH . "/" . $this->controller . ".php";
-        if (file_exists($fileName)) {
-            require_once $fileName;
-        } else {
-            die("Lỗi: Không tìm thấy file controller tại " . $fileName);
-        }
-
-        // 3. Khởi tạo Class
+        // Nạp file controller
+        require_once CONTROLLER_PATH . "/" . $this->controller . ".php";
+        
+        // Khởi tạo Class Controller
         $this->controller = new $this->controller;
 
-        // 4. Kiểm tra Action (Phương thức)
-        if (isset($url[1])) {
+        // 3. Xử lý METHOD (Hàm)
+        if (!empty($url[1])) {
+            // Kiểm tra xem trong class controller đó có hàm này không
             if (method_exists($this->controller, $url[1])) {
-                $this->action = $url[1];
+                $this->method = $url[1];
                 unset($url[1]);
             }
         }
 
-        // 5. Tham số còn lại
+        // 4. Xử lý PARAMS (Tham số còn lại)
         $this->params = $url ? array_values($url) : [];
 
-        // 6. Chạy hàm
-        call_user_func_array([$this->controller, $this->action], $this->params);
+        // 5. GỌI HÀM THỰC THI
+        // call_user_func_array([TênClass, TênHàm], [MảngThamSố])
+        call_user_func_array(
+            [$this->controller, $this->method],
+            $this->params
+        );
     }
 
-    protected function parseUrl()
+    // Hàm tách URL thành mảng
+    public function parseUrl()
     {
         if (isset($_GET["url"])) {
-            return explode("/", filter_var(trim($_GET["url"], "/"), FILTER_SANITIZE_URL));
+            return explode("/", filter_var(
+                rtrim($_GET["url"], "/"),
+                FILTER_SANITIZE_URL
+            ));
         }
         return [];
     }

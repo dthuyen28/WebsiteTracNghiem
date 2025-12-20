@@ -1,134 +1,41 @@
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="<?php echo _BASE_URL; ?>/public/css/themes/header.css">
-    
-    
-</head>
-<!-- Header -->
-<header id="page-header">
-    <!-- Header Content -->
-    <div class="content-header">
-        <!-- Left Section -->
-        <div>
-            <!-- Toggle Sidebar -->
-            <!-- Layout API, functionality initialized in Template._uiApiLayout()-->
-            <button type="button" class="btn btn-alt-secondary me-1 d-lg-none" data-toggle="layout"
-                data-action="sidebar_toggle">
-                <i class="fa fa-fw fa-bars"></i>
-            </button>
-            <button type="button" class="btn btn-alt-secondary me-1 d-none d-lg-inline-block" data-toggle="layout" data-action="sidebar_mini_toggle">
-                <i class="fa fa-fw fa-ellipsis-v"></i>
-            </button>
-            <!-- END Toggle Sidebar -->
-            <div class="dropdown d-inline-block">
-                <button type="button" class="btn btn-alt-secondary me-1" id="page-header-themes-dropdown"
-                    data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
-                    <i class="fa fa-fw fa-wrench"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-lg p-0" aria-labelledby="page-header-themes-dropdown">
-                    <div class="p-3 bg-body-light rounded-top">
-                        <h5 class="h6 text-center mb-0">
-                            Màu sắc
-                        </h5>
-                    </div>
-                    <div class="p-3">
-                        <div class="row g-0 text-center">
-                            <div class="col-2">
-                                <a class="text-default" data-toggle="theme" data-theme="default"
-                                    href="javascript:void(0)">
-                                    <i class="fa fa-2x fa-circle"></i>
-                                </a>
-                            </div>
-                            <div class="col-2">
-                                <a class="text-xwork" data-toggle="theme"
-                                    data-theme="./public/css/themes/xwork.min.css" href="javascript:void(0)">
-                                    <i class="fa fa-2x fa-circle"></i>
-                                </a>
-                            </div>
-                            <div class="col-2">
-                                <a class="text-xplay" data-toggle="theme"
-                                    data-theme="./public/css/themes/xplay.min.css" href="javascript:void(0)">
-                                    <i class="fa fa-2x fa-circle"></i>
-                                </a>
-                            </div>
-                            <div class="col-2">
-                                <a class="text-xeco" data-toggle="theme"
-                                    data-theme="./public/css/themes/xeco.min.css" href="javascript:void(0)">
-                                    <i class="fa fa-2x fa-circle"></i>
-                                </a>
-                            </div>
-                            <div class="col-2">
-                                <a class="text-xsmooth" data-toggle="theme"
-                                    data-theme="./public/css/themes/xsmooth.min.css" href="javascript:void(0)">
-                                    <i class="fa fa-2x fa-circle"></i>
-                                </a>
-                            </div>
-                            <div class="col-2">
-                                <a class="text-xinspire" data-toggle="theme"
-                                    data-theme="./public/css/themes/xinspire.min.css" href="javascript:void(0)">
-                                    <i class="fa fa-2x fa-circle"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="<?php echo _BASE_URL; ?>home" class="nav-link">Trang chủ</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="#" class="nav-link">Liên hệ</a>
+        </li>
+    </ul>
 
-        </div>
-        <!-- END Left Section -->
-
-        <!-- Right Section -->
-        <div>
-            <?php include "notifications.php" ?>
-            <!-- User Dropdown -->
-            <div class="dropdown d-inline-block">
-                <button type="button" class="btn btn-alt-secondary" id="page-header-user-dropdown"
-                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="far fa-fw fa-user-circle"></i>
-                    <i class="fa fa-fw fa-angle-down d-none opacity-50 d-sm-inline-block"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-end p-0" aria-labelledby="page-header-user-dropdown">
-                    <div class="bg-body-light rounded-top fw-semibold text-center p-3 border-bottom">
-                        <span class="avatar-Account">
-                            <img class="img-avatar img-avatar48"
-                                src="<?php echo _BASE_URL; ?>/public/media/avatars/<?php echo (empty($_SESSION['avatar'])) ? 'avataruser.png' : $_SESSION['avatar']; ?>"
-                                alt="User Avatar"
-                                style="width: 45px !important; height: 45px !important; min-width: 45px !important; object-fit: cover; border-radius: 50%;">
-                        </span>
-                        <div class="pt-2 load-nameAccount">
-                            <a class="fw-semibold ">
-                                <span class="d-none d-xl-inline-block ms-1 fw-medium">
-                                    <?php echo $_SESSION['user_name'] ?? 'Khách'; ?>
-                                </span>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="p-2">
-                        <a class="dropdown-item" href="./account">
-                            <i class="si si-settings me-2 fa-fw icon-dropdown-item"></i> Tài khoản
-                        </a>
-                        <a class="dropdown-item" href="./auth/logout">
-                            <i class="si si-logout me-2 fa-fw icon-dropdown-item"></i> Đăng xuất
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <!-- END User Dropdown -->
-        </div>
-        <!-- END Right Section -->
-    </div>
-    <!-- END Header Content -->
-
-    <div id="page-header-loader" class="overlay-header bg-header-dark">
-        <div class="bg-white-10">
-            <div class="content-header">
-                <div class="w-100 text-center">
-                    <i class="fa fa-fw fa-sun fa-spin text-white"></i>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
-
-<!-- danh sách thông báo >
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                <i class="fas fa-expand-arrows-alt"></i>
+            </a>
+        </li>
+        
+        <li class="nav-item dropdown user-menu">
+            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                <img src="<?php echo _BASE_URL; ?>public/dist/img/avatar5.png" class="user-image img-circle elevation-2" alt="User Image">
+                <span class="d-none d-md-inline"><?php echo $_SESSION['user_fullname'] ?? 'User'; ?></span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                <li class="user-header bg-primary">
+                    <img src="<?php echo _BASE_URL; ?>public/dist/img/avatar5.png" class="img-circle elevation-2" alt="User Image">
+                    <p>
+                        <?php echo $_SESSION['user_fullname'] ?? 'User'; ?>
+                        <small><?php echo ($_SESSION['user_role'] == 'admin') ? 'Quản trị viên' : 'Sinh viên'; ?></small>
+                    </p>
+                </li>
+                <li class="user-footer">
+                    <a href="<?php echo _BASE_URL; ?>account" class="btn btn-default btn-flat">Hồ sơ</a>
+                    <a href="<?php echo _BASE_URL; ?>auth/logout" class="btn btn-default btn-flat float-right">Đăng xuất</a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</nav>
