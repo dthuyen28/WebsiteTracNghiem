@@ -1,9 +1,8 @@
 <?php
-include "config.php";
+feature/core_auth
+require_once "config.php";
+require_once MODEL_PATH . "/UserModel.php";
 
-if ($conn->ping()) {
-    echo "Kết nối database thành công!";
-} else {
-    echo "Kết nối thất bại!";
-}
-?>
+new UserModel();
+echo "CORE_PATH OK";
+
