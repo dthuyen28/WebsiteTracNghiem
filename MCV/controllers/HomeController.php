@@ -13,6 +13,10 @@ class HomeController extends Controller
         // Nếu chưa đăng nhập, AuthCore sẽ đá về trang auth/signin ngay lập tức
         AuthCore::checkAuthentication();
 
+        if (!isset($_SESSION['user'])){
+            header("Location: " . _BASE_URL . "auth/signin");
+            exit();
+        } 
         // 2. Load các Model cần thiết
         $this->userModel = $this->model("UserModel");
         
@@ -28,12 +32,7 @@ class HomeController extends Controller
     {
         // Lấy thông tin user hiện tại từ Session
         // (Dữ liệu này đã được lưu lúc đăng nhập trong AuthController)
-        $currentUser = [
-            'id' => $_SESSION['user_id'],
-            'fullname' => $_SESSION['user_fullname'],
-            'role' => $_SESSION['user_role']
-        ];
-
+        $currentUser = $_SESSION['user'];
         // Lấy danh sách môn học (Giả sử bạn sẽ viết hàm getAll trong SubjectModel)
         // $listSubjects = $this->subjectModel->getAll();
         $listSubjects = []; // Tạm thời để rỗng để code không lỗi

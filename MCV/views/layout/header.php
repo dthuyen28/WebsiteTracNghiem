@@ -1,3 +1,7 @@
+<?php if (isset($_SESSION['user'])): ?>
+    Xin chào <?= $_SESSION['user']['username'] ?>
+<?php endif; ?>
+
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <ul class="navbar-nav">
         <li class="nav-item">

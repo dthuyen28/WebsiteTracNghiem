@@ -18,15 +18,23 @@ class AuthController extends Controller
     {
         header("Location: " . _BASE_URL . "auth/signin");
     }
+    private function setUserSession($user)
+{
+    $_SESSION['user'] = [
+        'id'       => $user['id'],
+        'username' => $user['username'],
+        'fullname' => $user['fullname'],
+        'email'    => $user['email'],
+        'role'     => $user['role']
+    ];
+}
+
 
     /**
      * --- ĐĂNG NHẬP (Xử lý Ajax) ---
      */
     public function signin()
-    {
-            AuthCore::onLogin();
-        
-        
+    {      
         // 1. Xử lý khi Ajax gửi dữ liệu POST lên
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header('Content-Type: application/json; charset=utf-8');
@@ -45,12 +53,8 @@ class AuthController extends Controller
                 // Lưu Cookie (1 ngày)
                 setcookie("token", $token, time() + 86400, "/");
 
-                // Lưu Session
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['user_username'] = $user['username'];
-                $_SESSION['user_fullname'] = $user['fullname'];
-                $_SESSION['user_email'] = $user['email'];
-                $_SESSION['user_role'] = $user['role'];
+                // Lưu Session      
+                $this->setUserSession($user);
 
                 echo json_encode(["status" => true, "msg" => "Đăng nhập thành công! Đang chuyển hướng..."], JSON_UNESCAPED_UNICODE );
             } else {
@@ -58,7 +62,8 @@ class AuthController extends Controller
             }
             exit; // Dừng code PHP tại đây để trả về JSON sạch
         }
-
+        AuthCore::onLogin();
+        
         // 2. Hiển thị View (GET)
         $this->view("single_layout", [
             "Page" => "auth/signin",
@@ -97,8 +102,6 @@ class AuthController extends Controller
 
             if ($result === true) {
                 echo json_encode(["status" => true, "msg" => "Đăng ký thành công! Vui lòng đăng nhập."], JSON_UNESCAPED_UNICODE);
-            } else {
-                echo json_encode(["status" => false, "msg" => $result], JSON_UNESCAPED_UNICODE); // $result là chuỗi lỗi từ Model trả về
             }
             exit;
         }

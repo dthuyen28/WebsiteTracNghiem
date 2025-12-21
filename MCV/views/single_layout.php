@@ -20,14 +20,29 @@
   <link rel="stylesheet" href="<?php echo _BASE_URL; ?>public/css/style.css">
 </head>
 
-<body class="hold-transition login-page">
-    
+<body class="hold-transition 
+<?php echo isset($_SESSION['user']) ? 'sidebar-mini layout-fixed' : 'login-page'; ?>">
+
+<?php if (isset($_SESSION['user'])): ?>
+    <?php require_once VIEW_PATH . '/layout/header.php'; ?>
+    <?php require_once VIEW_PATH . '/layout/menu.php'; ?>
+<?php endif; ?>
+
+<?php if (isset($_SESSION['user'])): ?>
+    <div class="content-wrapper">
+        <?php 
+            if (isset($data['Page'])) {
+                require_once VIEW_PATH . "/" . $data['Page'] . ".php";
+            }
+        ?>
+    </div>
+<?php else: ?>
     <?php 
-        // $data['Page'] được truyền từ Controller (ví dụ: "auth/signin")
         if (isset($data['Page'])) {
             require_once VIEW_PATH . "/" . $data['Page'] . ".php";
         }
     ?>
+<?php endif; ?>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>

@@ -95,7 +95,7 @@ class UserModel extends Database
     // 5. Hàm phụ trợ: Lưu session
     private function setUserSession($user)
     {
-$_SESSION['user'] = [
+        $_SESSION['user'] = [
             'id' => $user['id'],
             'username' => $user['username'],
             'fullname' => $user['fullname'],

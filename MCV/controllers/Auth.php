@@ -271,5 +271,5 @@ class Auth extends Controller
             echo "true";
         }
     }
-}
+}//xóa file này.
 ?>
