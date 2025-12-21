@@ -27,5 +27,39 @@ class QuestionModel
 
         return $stmt->fetchAll();
     }
+
+    public function insertQuestion($content, $level)
+{
+        $sql = "INSERT INTO {$this->table} (content, level) VALUES (:content, :level)";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":content", $content);
+        $stmt->bindParam(":level", $level);
+        return $stmt->execute();
+}
+    public function getQuestionById($id)
+{
+        $sql = "SELECT * FROM {$this->table} WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":id", $id);
+        $stmt->execute();
+        return $stmt->fetch();
 }
 
+    public function updateQuestion($id, $content, $level)
+{
+        $sql = "UPDATE {$this->table} SET content = :content, level = :level WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":content", $content);
+        $stmt->bindParam(":level", $level);
+        $stmt->bindParam(":id", $id);
+        return $stmt->execute();
+}
+    public function deleteQuestion($id)
+{
+        $sql = "DELETE FROM {$this->table} WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":id", $id);
+        return $stmt->execute();
+}
+
+}

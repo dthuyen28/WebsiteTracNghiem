@@ -1,5 +1,5 @@
 <?php
-feature/core_auth
+//feature/core_auth
 session_start();
 require_once "config.php";
 require_once "MCV/core/App.php";
