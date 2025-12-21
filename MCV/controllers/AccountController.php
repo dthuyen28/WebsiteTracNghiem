@@ -18,7 +18,7 @@ class AccountController extends Controller
     function index()
     {
         // Lấy thông tin user hiện tại từ Session
-        $userId = $_SESSION['user_id'];
+        $userId = $_SESSION['user']['id'];
         $user = $this->userModel->getById($userId);
 
         $this->view("main_layout", [
@@ -40,7 +40,7 @@ class AccountController extends Controller
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $current_pass = $_POST['matkhaucu'];
             $new_pass = $_POST['matkhaumoi'];
-            $id = $_SESSION['user_id'];
+            $id = $_SESSION['user']['id'];
 
             // 1. Lấy thông tin user để check pass cũ
             $user = $this->userModel->getById($id);
@@ -65,12 +65,12 @@ class AccountController extends Controller
     public function updateProfile()
     {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $id = $_SESSION['user_id'];
+            $id = $_SESSION['user']['id'];
             $fullname = $_POST['fullname'];
             $email = $_POST['email'];
 
             // Lấy email hiện tại trong session để so sánh
-            $currentEmail = $_SESSION['user_email'];
+            $currentEmail = $_SESSION['user']['email'];
 
             // Nếu user đổi email mới -> Cần check xem email mới có bị trùng với người khác không
             if ($email !== $currentEmail) {

@@ -1,5 +1,5 @@
 <?php
-
+require_once CORE_PATH . '/AuthMiddleware.php';
 class UserController extends Controller
 {
     public $userModel;

@@ -11,14 +11,20 @@ class AuthCore
      */
     public static function onLogin()
     {
+        if (isset($_SESSION['user'])) {
+            header("Location: " . _BASE_URL . "home");
+            exit();
+        }
         if (isset($_COOKIE['token'])) {
             $userModel = new UserModel();
             $token = $_COOKIE['token'];
+            $user = $userModel->validateToken($token);
             
             // Kiểm tra token có khớp trong DB không
-            if ($userModel->validateToken($token) == true) {
+            if ($user) {
+                $userModel->setUserSession($user);
                 // Nếu đúng -> Chuyển hướng về trang chủ
-                header("Location: " . _BASE_URL . "home/index");
+                header("Location: " . _BASE_URL . "home");
                 exit();
             }
         }
@@ -30,20 +36,16 @@ class AuthCore
      */
     public static function checkAuthentication()
     {
-        // 1. Kiểm tra xem trình duyệt có Cookie token không
-        if (!isset($_COOKIE['token'])) {
-            self::redirectToLogin();
-            return;
-        }
-
-        $token = $_COOKIE['token'];
-        $userModel = new UserModel();
-
-        // 2. Validate token với Database
-        // Hàm này trong UserModel sẽ tự động khôi phục $_SESSION nếu token đúng
-        if ($userModel->validateToken($token) == false) {
-            // Nếu token sai (hack hoặc hết hạn) -> Xóa cookie -> Đá về login
-            setcookie("token", "", time() - 3600, "/"); 
+        if (!isset($_SESSION['user'])) {
+            if (isset($_COOKIE['token'])) {
+                $token = $_COOKIE['token'];
+                $userModel = new UserModel();
+                $user = $userModel->validateToken($token);
+                if ($user) {
+                    $userModel->setUserSession($user);
+                    return;
+                }
+            }
             self::redirectToLogin();
         }
     }
@@ -59,9 +61,9 @@ class AuthCore
         self::checkAuthentication();
 
         // Kiểm tra role trong Session (được tạo ra bởi UserModel->validateToken)
-        if (isset($_SESSION['user_role'])) {
+        if (isset($_SESSION['user']['role'])) {
             // So sánh role hiện tại với role yêu cầu (ví dụ: 'admin' == 'admin')
-            if ($_SESSION['user_role'] === $requiredRole) {
+            if ($_SESSION['user']['role'] === $requiredRole) {
                 return true; // Được phép đi tiếp
             }
         }
@@ -81,12 +83,12 @@ class AuthCore
      */
     private static function redirectToLogin()
     {
-        $path = _BASE_URL . "auth/signin";
-        header("Location: $path");
+        setcookie("token", "", time() - 3600, "/");
+        header("Location: " . _BASE_URL . "auth/signin");
         exit;
     }
     public static function checkStudent() {
-        self::redirectToLogin();
+        setcookie("token", "", time() - 3600, "/");
         if ($_SESSION['user_role'] !== 'student') {
             header('Location: ' . _BASE_URL . 'admin/dashboard');
             exit;

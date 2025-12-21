@@ -24,13 +24,14 @@
   <?php require_once VIEW_PATH . "/layout/header.php"; ?>
 
   <?php require_once VIEW_PATH . "/layout/menu.php"; ?>
-
+  <div class="content-wrapper">
   <?php 
       // Load view con động dựa trên biến $data['Page']
       if (isset($data['Page'])) {
           require_once VIEW_PATH . "/" . $data['Page'] . ".php";
       }
   ?>
+  </div>
 
   <?php require_once VIEW_PATH . "/layout/footer.php"; ?>
 

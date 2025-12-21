@@ -1,5 +1,5 @@
 <?php
-
+requireRole('admin');
 class AdminController extends Controller
 {
     // Khai báo các biến Model sẽ dùng
@@ -95,7 +95,7 @@ class AdminController extends Controller
             $id = $_POST['id'];
             
             // Không cho phép xóa chính mình
-            if ($id == $_SESSION['user_id']) {
+            if ($id == $_SESSION['user']['id']) {
                 echo json_encode(["status" => false, "msg" => "Không thể tự xóa tài khoản đang đăng nhập!"]);
                 return;
             }

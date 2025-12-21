@@ -1,7 +1,7 @@
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
-            <h1 class="m-0">Xin chào, <?php echo $_SESSION['user_fullname']; ?>!</h1>
+            <h1 class="m-0">Xin chào, <?php echo $data['User']['fullname']; ?>!</h1>
         </div>
     </div>
 

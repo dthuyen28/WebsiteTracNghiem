@@ -12,6 +12,7 @@ class UserModel extends Database
     }
 
     // 1. Kiểm tra đăng nhập (Sửa lại theo bảng users)
+    // So sánh mật khẩu người dùng nhập với mật khẩu đã hash trong DB
     public function checkLogin($username, $password)
     {
     
@@ -32,6 +33,14 @@ class UserModel extends Database
         }
         return false;
     }
+    public function getByUsername($username)
+{
+    $sql = "SELECT * FROM users WHERE username = ?";
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute([$username]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
 
     // 2. Thêm người dùng mới (Đăng ký)
     public function create($username, $password, $fullname, $email, $role = 'student')
@@ -76,13 +85,7 @@ class UserModel extends Database
         try {
             $stmt = $this->db->prepare($sql);
             $stmt->execute([$token]);
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if ($user) {
-                // Tái tạo lại Session
-                $this->setUserSession($user);
-                return true;
-            }
+            return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             return false;
         }
@@ -92,11 +95,13 @@ class UserModel extends Database
     // 5. Hàm phụ trợ: Lưu session
     private function setUserSession($user)
     {
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['user_username'] = $user['username'];
-        $_SESSION['user_fullname'] = $user['fullname'];
-        $_SESSION['user_role'] = $user['role']; // 'admin' hoặc 'student'
-        $_SESSION['user_email'] = $user['email'];
+        $_SESSION['user'] = [
+            'id' => $user['id'],
+            'username' => $user['username'],
+            'fullname' => $user['fullname'],
+            'email' => $user['email'],
+            'role' => $user['role']
+        ]; 
     }
 
     // 6. Kiểm tra Username tồn tại
