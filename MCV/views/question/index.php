@@ -1,4 +1,5 @@
 <h2>Danh sách câu hỏi</h2>
+<<<<<<< HEAD
 
 <table border="1" cellpadding="8">
     <tr>
@@ -25,3 +26,11 @@
     </tr>
     <?php endforeach; ?>
 </table>
+=======
+<a href="index.php?controller=question&action=create">Thêm câu hỏi</a>
+<ul>
+<?php foreach ($questions as $q): ?>
+    <li><?= $q['content'] ?></li>
+<?php endforeach; ?>
+</ul>
+>>>>>>> develop
