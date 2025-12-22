@@ -1,6 +1,6 @@
-<?php if (isset($_SESSION['user'])): ?>
-    Xin chào <?= $_SESSION['user']['username'] ?>
-<?php endif; ?>
+<script>
+    var BASE_URL = "<?php echo _BASE_URL; ?>";
+</script>
 
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <ul class="navbar-nav">
@@ -25,14 +25,25 @@
         <li class="nav-item dropdown user-menu">
             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
                 <img src="<?php echo _BASE_URL; ?>public/dist/img/avatar5.png" class="user-image img-circle elevation-2" alt="User Image">
-                <span class="d-none d-md-inline"><?php echo $_SESSION['user_fullname'] ?? 'User'; ?></span>
+                <span class="d-none d-md-inline">
+                    <?php 
+                        // Ưu tiên hiển thị fullname, nếu không có thì hiện username, không có nữa thì hiện 'User'
+                        echo $_SESSION['user_fullname'] ?? $_SESSION['user']['username'] ?? 'User'; 
+                    ?>
+                </span>
             </a>
             <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                 <li class="user-header bg-primary">
                     <img src="<?php echo _BASE_URL; ?>public/dist/img/avatar5.png" class="img-circle elevation-2" alt="User Image">
                     <p>
-                        <?php echo $_SESSION['user_fullname'] ?? 'User'; ?>
-                        <small><?php echo ($_SESSION['user_role'] == 'admin') ? 'Quản trị viên' : 'Sinh viên'; ?></small>
+                        <?php echo $_SESSION['user_fullname'] ?? $_SESSION['user']['username'] ?? 'User'; ?>
+                        <small>
+                            <?php 
+                                // Kiểm tra Role để hiển thị chức vụ
+                                $role = $_SESSION['user_role'] ?? 'student';
+                                echo ($role == 'admin') ? 'Quản trị viên' : 'Sinh viên'; 
+                            ?>
+                        </small>
                     </p>
                 </li>
                 <li class="user-footer">
