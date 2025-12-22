@@ -184,7 +184,7 @@ class UserModel extends Database
 
         try {
             $stmt = $this->db->prepare($sql);
-            return $stmt->execute($params);
+return $stmt->execute($params);
         } catch (PDOException $e) {
             return false;
         }
