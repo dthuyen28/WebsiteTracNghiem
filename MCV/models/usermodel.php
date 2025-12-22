@@ -17,6 +17,7 @@ class UserModel extends Database
     {
     
         $sql = "SELECT * FROM `users` WHERE `username` = ?";
+
         
         try {
             $stmt = $this->db->prepare($sql);
@@ -93,7 +94,7 @@ class UserModel extends Database
     }
 
     // 5. Hàm phụ trợ: Lưu session
-    private function setUserSession($user)
+    public function setUserSession($user)
     {
         $_SESSION['user'] = [
             'id' => $user['id'],
@@ -187,5 +188,33 @@ class UserModel extends Database
         } catch (PDOException $e) {
             return false;
         }
+    }
+    // --- PHẦN QUÊN MẬT KHẨU ---
+
+    // 1. Lưu mã OTP vào database
+    public function updateOpt($email, $otp)
+    {
+        $sql = "UPDATE `users` SET `otp` = ? WHERE `email` = ?";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([$otp, $email]);
+    }
+
+    // 2. Kiểm tra mã OTP có đúng không
+    public function checkOpt($email, $otp)
+    {
+        $sql = "SELECT * FROM `users` WHERE `email` = ? AND `otp` = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$email, $otp]);
+        return $stmt->fetch(PDO::FETCH_ASSOC); // Trả về data user nếu đúng, false nếu sai
+    }
+
+    // 3. Đổi mật khẩu theo Email (Dùng khi reset pass)
+    public function changePasswordByEmail($email, $new_password)
+    {
+        $passwordHash = password_hash($new_password, PASSWORD_DEFAULT);
+        // Cập nhật mật khẩu mới và XÓA luôn mã OTP để không dùng lại được nữa
+        $sql = "UPDATE `users` SET `password` = ?, `otp` = NULL WHERE `email` = ?";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([$passwordHash, $email]);
     }
 }
